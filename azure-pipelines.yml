@@ -1,0 +1,44 @@
+trigger:
+- main
+
+variables:
+  # Azure Resource Manager connection created during pipeline creation
+  azureSubscription: '${Your Azure Subscription Name}'
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+  environmentName: '${Azure DevOps Environment Name}'
+
+pool:
+  vmImage: $(vmImageName)
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:  
+  - job: Build
+    displayName: Build
+    steps:
+    - task: CopyFilesOverSSH@0
+      inputs:
+        sshEndpoint: '${ssh-connection-name}'
+        sourceFolder: '$(System.DefaultWorkingDirectory)'
+        contents: |
+          **
+          !node_modules/**
+          !.git/**
+        targetFolder: '/home/${Ubuntu-Server-Username}/${nodejs-app-folder}'
+        cleanTargetFolder: true
+        cleanHiddenFilesInTarget: false
+        readyTimeout: '20000'
+    - task: SSH@0
+      inputs:
+        sshEndpoint: '${ssh-connection-name}'
+        runOptions: 'inline'
+        inline: |
+          cd ${nodejs-app-folder}
+          npm install --silent
+          npm run build
+          pm2 stop ${build-folder-main-js-file}
+          pm2 start ${build-folder-main-js-file}
+        readyTimeout: '20000'
