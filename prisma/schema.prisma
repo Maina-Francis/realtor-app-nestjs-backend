@@ -20,6 +20,7 @@ model User{
   user_type               UserType
   created_at              DateTime @default(now())
   updated_at              DateTime @updatedAt
+  homes                   Home[]
 }
 
 // Home Model
@@ -36,6 +37,8 @@ model Home{
   created_at              DateTime @default(now())
   updated_at              DateTime @updatedAt
   images                  Image[]
+  realtor_id              Int
+  realtor                 User @relation(fields: [realtor_id], references: [id])
 }
 
 
