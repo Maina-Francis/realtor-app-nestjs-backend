@@ -10,6 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Home Model
 model Home{
   id                      Int   @id @default(autoincrement())
   address                 String
@@ -25,4 +26,12 @@ model Home{
 enum PropertyType{
   RESIDENTIAL
   CONDO
+}
+
+
+// Image Model
+model Image{
+  id                      Int   @id @default(autoincrement())
+  url                     String
+
 }
