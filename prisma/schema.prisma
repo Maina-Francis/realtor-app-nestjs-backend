@@ -46,6 +46,11 @@ model Image{
   updated_at              DateTime @updatedAt
 }
 
+// Message Model
+model Message{
+  id                      Int   @id @default(autoincrement())
+  message                 String      
+}
 
 enum PropertyType{
   RESIDENTIAL
